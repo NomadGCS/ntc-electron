@@ -6,7 +6,7 @@
       <script value="make" />
     </scripts>
     <node-interpreter value="project" />
-    <package-manager value="pnpm" />
+    <package-manager value="yarn" />
     <envs />
     <method v="2" />
   </configuration>
