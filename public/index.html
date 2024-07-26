@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Activation</title>
+    <style>
+        html {
+            background: url('LoginBackground.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        img.displayed {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 5%;
+        }
+        #loadingText {
+            display: block;
+            text-align: center;
+            font-size: 25px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .in-page-notification {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            top: 25%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Apply translation */
+            padding: 15px; /* Padding inside the notification */
+            background-color: #CC2027; /* Red background color */
+            color: whitesmoke; /* White text color */
+            text-align: center; /* Centered text */
+            border-radius: 20px; /* Rounded corners */
+            z-index: 100; /* Make sure it's on top */
+        }
+
+    </style>
+    <script>
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            let URL = 'https://10.201.30.1' //<------------------------ Set me to truck IP!!!! ---------------------------
+
+            let websiteFound = false;
+            setInterval(function() {
+                fetch(URL + ':1880')//enter the IP address you want to keep checking here, we add port 1880 to check the node-red server which has cors enabled
+                    .then(response => {
+                        if (response.status === 200) {
+                            websiteFound = true;
+                            setTimeout(() => {window.location = URL;}, 60000)
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }, 3000); // 3000 milliseconds = 3 seconds
+
+            setTimeout(function() {
+                if (!websiteFound) {
+                    const notification = document.getElementById('inPageNotification');
+                    notification.style.display = 'block'; // Show the notification
+                    document.getElementById('loadingText').style.display = 'none'
+                }
+            }, 180000); // 180,000 milliseconds = 3 minutes
+        });
+
+    </script>
+</head>
+<body id="body">
+<div id="text">
+    <img src="nomad_logo_black.png" class="displayed" align="middle"/>
+    <p id= "loadingText">Please wait while Nomad Total Command loads.  It will take approximately 3 minutes.</p>
+</div>
+<div id="inPageNotification" class="in-page-notification" style="display:none;">
+    <h2> There appears to be a minor issue.</h2>
+    <p>Please press and hold the reset button located on the electrical cabnet door for 40 seconds in order to reboot the system. <br/>If the issue is not resolved, please contact Servicedesk@nomadgcs.com for assistance.
+    </p>
+</div>
+</body>
+</html>
