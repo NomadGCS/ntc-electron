@@ -1,9 +1,7 @@
 // Modules to control application life and create native browser window
 const { app, net, session, BrowserWindow } = require('electron')
 const path = require('node:path')
-// const https = require('node:https')
 const fs = require('fs')
-// const axios = require('axios')
 
 function redirectOnStatus(mainWindow, url, urlLoaded) {
 
@@ -39,7 +37,7 @@ function redirectOnStatus(mainWindow, url, urlLoaded) {
         console.error(error)
         console.debug(`${url} is not reachable`)
         if (urlLoaded) {
-            mainWindow.loadFile('public/index.html')
+            mainWindow.loadFile('src/index.html')
         }
 
         setTimeout(() => redirectOnStatus(mainWindow, url, false), 3000)
@@ -53,14 +51,14 @@ function createWindow () {
     const mainWindow = new BrowserWindow({
         autoHideMenuBar: true,
         kiosk: true,
-        icon: 'public/logo.png',
+        icon: 'images/icon.png',
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         }
     })
 
     // and load the index.html of the app.
-    mainWindow.loadFile('public/index.html')
+    mainWindow.loadFile('src/index.html')
     redirectOnStatus(mainWindow, 'https://10.100.201.41', false)
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
