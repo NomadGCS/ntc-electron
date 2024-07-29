@@ -1,19 +1,30 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
+const { app, net, session, BrowserWindow } = require('electron')
 const path = require('node:path')
-const https = require('node:https')
+// const https = require('node:https')
 const fs = require('fs')
-const axios = require('axios')
+// const axios = require('axios')
 
 function redirectOnStatus(mainWindow, url, urlLoaded) {
 
-    https.globalAgent.options.ca = [
-        fs.readFileSync('ca.pem'),
-    ]
+    const request = net.request({
+        method: 'GET', url: url
+    })
 
-    const agent = new https.Agent({ rejectUnauthorized: false, ca: [ fs.readFileSync('ca.pem') ] })
-    axios.get(url, { httpsAgent: agent }).then(response => {
-        if (response.status === 200 && !urlLoaded) {
+    request.on('response', response => {
+
+        console.log(`STATUS: ${response.statusCode}`);
+        console.log(`HEADERS: ${JSON.stringify(response.headers)}`);
+
+        response.on('data', (chunk) => {
+            console.log(`BODY: ${chunk}`);
+        });
+
+        response.on('end', () => {
+            console.log('No more data in response.');
+        });
+
+        if (response.statusCode === 200 && !urlLoaded) {
             mainWindow.loadURL(url)
             setTimeout(() => {
                 redirectOnStatus(mainWindow, url, true)
@@ -21,7 +32,9 @@ function redirectOnStatus(mainWindow, url, urlLoaded) {
         } else {
             console.log(response)
         }
-    }).catch(error => {
+    })
+
+    request.on('error', error => {
 
         console.error(error)
         console.debug(`${url} is not reachable`)
@@ -31,6 +44,8 @@ function redirectOnStatus(mainWindow, url, urlLoaded) {
 
         setTimeout(() => redirectOnStatus(mainWindow, url, false), 3000)
     })
+
+    request.end();
 }
 
 function createWindow () {
@@ -63,13 +78,36 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-    createWindow()
 
     app.on('activate', function () {
         // On macOS it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
+
+    app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+        // On certificate error we disable default behaviour (stop loading the page)
+        // and we then say "it is all fine - true" to the callback
+
+        event.preventDefault();
+        callback(true);
+    });
+
+    // const caPath = path.join(__dirname, 'ca.pem');
+    // const ca = fs.readFileSync(caPath);
+    //
+    // net.addAuthority(ca.toString(), {
+    //     // This is optional, depending on your need to enforce the CA as a root authority.
+    //     type: 'root'
+    // });
+    //
+    // session.defaultSession.setCertificateVerifyProc((request, callback) => callback(0))
+    session.defaultSession.setCertificateVerifyProc((request, callback) => {
+        // Bypass certificate errors for this specific domain
+        callback(0);
+    });
+
+    createWindow()
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
