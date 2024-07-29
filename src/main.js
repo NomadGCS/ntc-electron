@@ -2,21 +2,18 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
 const https = require('node:https')
+const fs = require('fs')
+const axios = require('axios')
 
 function redirectOnStatus(mainWindow, url, urlLoaded) {
 
-    const httpsAgent = new https.Agent({
-        rejectUnauthorized: false,
-    });
+    https.globalAgent.options.ca = [
+        fs.readFileSync('ca.pem'),
+    ]
 
-    fetch(
-        url,
-        {
-            method: 'GET',
-            agent: httpsAgent
-        }
-    ).then(response => {
-        if (response.ok && !urlLoaded) {
+    const agent = new https.Agent({ rejectUnauthorized: false, ca: [ fs.readFileSync('ca.pem') ] })
+    axios.get(url, { httpsAgent: agent }).then(response => {
+        if (response.status === 200 && !urlLoaded) {
             mainWindow.loadURL(url)
             setTimeout(() => {
                 redirectOnStatus(mainWindow, url, true)
@@ -53,6 +50,14 @@ function createWindow () {
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
 }
+
+// SSL/TSL: this is the self signed certificate support
+// app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+//     // On certificate error we disable default behaviour (stop loading the page)
+//     // and we then say "it is all fine - true" to the callback
+//     event.preventDefault();
+//     callback(true);
+// });
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
