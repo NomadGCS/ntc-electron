@@ -4,18 +4,27 @@ const path = require('node:path')
 const fs = require('fs')
 
 let mainWindow
+let addressLoaded = false
 
-function redirectOnStatus (ip, urlLoaded) {
+function redirectOnStatus (address) {
 
-    const request = net.request({
-        method: 'GET', protocol: 'https:', url: ip, path: '/'
-    })
+    const handleUnreachable = () => {
 
+        console.debug(`${address} is not reachable`)
+        if (addressLoaded) {
+            mainWindow.loadFile('src/index.html')
+            addressLoaded = false
+        }
+
+        setTimeout(() => redirectOnStatus(address), 3000)
+    }
+
+    const url = `https://${address}/`
+    console.log(`Pinging ${url}...`)
+    const request = net.request({ method: 'GET', url: url })
     request.on('response', response => {
 
-        console.log(`STATUS: ${response.statusCode}`)
-        console.log(`HEADERS: ${JSON.stringify(response.headers)}`)
-
+        console.log(`Received status: ${response.statusCode}`)
         response.on('data', (chunk) => {
             console.log(`BODY: ${chunk}`)
         })
@@ -24,25 +33,35 @@ function redirectOnStatus (ip, urlLoaded) {
             console.log('No more data in response.')
         })
 
-        if (response.statusCode === 200 && !urlLoaded) {
-            mainWindow.loadURL(url)
-            setTimeout(() => {
-                redirectOnStatus(url, true)
-            }, 30000)
-        } else {
-            console.log(response)
+        switch (response.statusCode) {
+            case 200:
+
+                setTimeout(() => redirectOnStatus(address), 10000)
+                if (!addressLoaded) {
+                    console.log(`Redirecting to ${url}`)
+                    mainWindow.loadURL(url)
+                    addressLoaded = true
+                }
+
+                break
+            case 404:
+            case 408:
+            case 410:
+            case 502:
+            case 503:
+            case 504:
+                console.log(response)
+                handleUnreachable()
+                break
+            default:
+                console.log(response)
+                break
         }
     })
 
     request.on('error', error => {
-
         console.error(error)
-        console.debug(`${url} is not reachable`)
-        if (urlLoaded) {
-            mainWindow.loadFile('src/index.html')
-        }
-
-        setTimeout(() => redirectOnStatus(url, false), 3000)
+        handleUnreachable()
     })
 
     request.end()
@@ -58,35 +77,27 @@ function createWindow () {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
             enableRemoteModule: false,
-            nodeIntegration: false,
+            nodeIntegration: false
         }
     })
 
-    const userDataPath = app.getPath('userData');
-    const ipFilePath = path.join(userDataPath, 'config.json');
-    const contents = fs.readFileSync(ipFilePath, 'utf8');
-    console.log(ipFilePath + " -> " + contents)
+    const userDataPath = app.getPath('userData')
+    const ipFilePath = path.join(userDataPath, 'config.json')
 
     if (fs.existsSync(ipFilePath)) {
-        const obj = JSON.parse(contents);
+        const contents = fs.readFileSync(ipFilePath, 'utf8')
+        console.log(ipFilePath + ' -> ' + contents)
+        const obj = JSON.parse(contents)
         mainWindow.loadFile('src/index.html')
-        redirectOnStatus(mainWindow, obj.ip, false)
+        redirectOnStatus(obj.address)
     } else {
-        mainWindow.loadFile('src/prompt.html');
+        mainWindow.loadFile('src/prompt.html')
     }
 
     mainWindow.on('closed', function () {
-        mainWindow = null;
-    });
+        mainWindow = null
+    })
 }
-
-// SSL/TSL: this is the self signed certificate support
-// app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
-//     // On certificate error we disable default behaviour (stop loading the page)
-//     // and we then say "it is all fine - true" to the callback
-//     event.preventDefault();
-//     callback(true);
-// });
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -126,9 +137,9 @@ app.whenReady().then(() => {
 
 app.on('activate', function () {
     if (mainWindow === null) {
-        createWindow();
+        createWindow()
     }
-});
+})
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -140,9 +151,10 @@ app.on('window-all-closed', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on('set-ip', (event, ip) => {
-    const userDataPath = app.getPath('userData');
-    const ipFilePath = path.join(userDataPath, 'config.json');
-    fs.writeFileSync(ipFilePath, JSON.stringify({ ip }), {  encoding: 'utf8' });
-    mainWindow.loadFile('src/index.html');
-});
+ipcMain.on('set-ip', (event, address) => {
+    console.log(`Setting address to ${address}...`)
+    const userDataPath = app.getPath('userData')
+    const configFilePath = path.join(userDataPath, 'config.json')
+    fs.writeFileSync(configFilePath, JSON.stringify({ address }), { encoding: 'utf8' })
+    redirectOnStatus(address)
+})
