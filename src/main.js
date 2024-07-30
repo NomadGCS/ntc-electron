@@ -126,10 +126,13 @@ app.on('activate', () => {
 
 app.on('window-all-closed', () => app.quit())
 
-ipcMain.on('set-ip', (event, address) => {
-    console.log(`Setting address to ${address}...`)
+ipcMain.on('set-config', (event, configObj) => {
+    config = configObj
+    const value = JSON.stringify(config)
+    console.debug(`Setting config to ${value}`)
     const userDataPath = app.getPath('userData')
     const configFilePath = path.join(userDataPath, 'config.json')
-    fs.writeFileSync(configFilePath, JSON.stringify({ address }), { encoding: 'utf8' })
-    redirectOnStatus(address)
+    fs.writeFileSync(configFilePath, value, { encoding: 'utf8' })
+    mainWindow.loadFile('src/index.html')
+    redirectOnStatus(config.address)
 })

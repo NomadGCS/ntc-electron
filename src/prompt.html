@@ -1,52 +1,26 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enter IP Address</title>
-    <style>
-        @font-face {
-            font-family: 'Montserrat';
-            src: url('fonts/Montserrat-Regular.ttf') format('ttf'),
-            url('fonts/Montserrat-Regular.ttf') format('ttf');
-            font-weight: 400;
-        }
-        body {
-            font-family: 'Montserrat', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .form-container {
-            text-align: center;
-        }
-        .form-container h1 {
-            margin-bottom: 20px;
-        }
-        .form-container form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .form-container input {
-            margin-bottom: 20px;
-            padding: 10px;
-            font-size: 16px;
-            width: 200px;
-        }
-        .form-container button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+    <link href="prompt.css" rel="stylesheet">
 </head>
-<body class="form-container">
-<h1>Enter IP Address</h1>
-<input type="text" id="ipInput" placeholder="Enter IP Address">
-<button id="submitIp">Submit</button>
+<body>
+<div class="logo">
+    <img src="../images/logo.png" alt="Logo">
+</div>
+<div class="content">
+    <div class="form-container">
+        <h1>Configuration</h1>
+        <div class="mui-textfield">
+            <input type="text" id="addressInput" placeholder="Enter IP Address" title="IP Address">
+            <span id="addressError"></span>
+            <input type="number" id="minutesInput" placeholder="Enter Expected Boot Time in Minutes" min="1" title="Boot Time">
+            <span id="minutesError"></span>
+        </div>
+        <button id="submitButton" type="submit">Submit</button>
+    </div>
+</div>
 <script src="prompt.js"></script>
 </body>
 </html>

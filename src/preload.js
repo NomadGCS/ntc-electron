@@ -20,5 +20,5 @@ window.addEventListener('DOMContentLoaded', () => {
 })
 
 contextBridge.exposeInMainWorld('electron', {
-    setIp: (ip) => ipcRenderer.send('set-ip', ip),
+    setConfig: (config) => ipcRenderer.send('set-config', config),
 });
