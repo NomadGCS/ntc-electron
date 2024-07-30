@@ -3,6 +3,7 @@ const { app, net, session, ipcMain, BrowserWindow } = require('electron')
 const path = require('node:path')
 const fs = require('fs')
 
+let config
 let mainWindow
 let addressLoaded = false
 
@@ -81,19 +82,6 @@ function createWindow () {
         }
     })
 
-    const userDataPath = app.getPath('userData')
-    const ipFilePath = path.join(userDataPath, 'config.json')
-
-    if (fs.existsSync(ipFilePath)) {
-        const contents = fs.readFileSync(ipFilePath, 'utf8')
-        console.log(ipFilePath + ' -> ' + contents)
-        const obj = JSON.parse(contents)
-        mainWindow.loadFile('src/index.html')
-        redirectOnStatus(obj.address)
-    } else {
-        mainWindow.loadFile('src/prompt.html')
-    }
-
     mainWindow.on('closed', function () {
         mainWindow = null
     })
@@ -110,46 +98,33 @@ app.whenReady().then(() => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
 
-    app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
-        // On certificate error we disable default behaviour (stop loading the page)
-        // and we then say "it is all fine - true" to the callback
-
-        event.preventDefault()
-        callback(true)
-    })
-
-    // const caPath = path.join(__dirname, 'ca.pem');
-    // const ca = fs.readFileSync(caPath);
-    //
-    // net.addAuthority(ca.toString(), {
-    //     // This is optional, depending on your need to enforce the CA as a root authority.
-    //     type: 'root'
-    // });
-    //
-    // session.defaultSession.setCertificateVerifyProc((request, callback) => callback(0))
     session.defaultSession.setCertificateVerifyProc((request, callback) => {
         // Bypass certificate errors for this specific domain
-        callback(0)
+        callback(request.hostname === config.address ? 0 : request.errorCode)
     })
 
-    createWindow()
-})
+    const userDataPath = app.getPath('userData')
+    const configFilePath = path.join(userDataPath, 'config.json')
+    if (fs.existsSync(configFilePath)) {
+        const contents = fs.readFileSync(configFilePath, 'utf8')
+        console.debug(configFilePath + ' -> ' + contents)
+        config = JSON.parse(contents)
+    }
 
-app.on('activate', function () {
-    if (mainWindow === null) {
-        createWindow()
+    createWindow()
+    if (config?.address) {
+        mainWindow.loadFile('src/index.html')
+        redirectOnStatus(config.address)
+    } else {
+        mainWindow.loadFile('src/prompt.html')
     }
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', function () {
-    if (process.platform !== 'darwin') app.quit()
+app.on('activate', () => {
+    if (mainWindow === null) createWindow()
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+app.on('window-all-closed', () => app.quit())
 
 ipcMain.on('set-ip', (event, address) => {
     console.log(`Setting address to ${address}...`)
