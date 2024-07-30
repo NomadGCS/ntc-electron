@@ -1,3 +1,5 @@
+const { contextBridge, ipcRenderer } = require('electron');
+
 /**
  * The preload script runs before `index.html` is loaded
  * in the renderer. It has access to web APIs as well as
@@ -16,3 +18,7 @@ window.addEventListener('DOMContentLoaded', () => {
         replaceText(`${type}-version`, process.versions[type])
     }
 })
+
+contextBridge.exposeInMainWorld('electron', {
+    setIp: (ip) => ipcRenderer.send('set-ip', ip),
+});
