@@ -1,24 +1,29 @@
 function countdownTimer(endTime) {
-    const countdownElement = document.getElementById("countdown")
 
-    function updateCountdown() {
-        const now = new Date().getTime()
-        const distance = endTime - now
+    const oneMinute = 1000 * 60
+    const truck = document.getElementById("truck")
+    const countdown = document.getElementById("countdown")
+    const display = document.getElementById("display")
+    const updateCountdown = () => {
 
-        if (distance < 0) {
-            clearInterval(timerInterval)
-            countdownElement.innerHTML = "Time's up!"
-        } else {
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000)
-            countdownElement.innerHTML = `Estimated time remaining: ${minutes}m ${seconds}s`
+        const timeToBoot = endTime - Date.now()
+        if (timeToBoot < 1000) {
+            setTimeout(() => truck.classList.add("truck-driving"), 3 * 60 * 1000)
+            display.innerHTML =
+                "<div style='margin-top: 40px'>Unable to reach the NTC server! Please ensure the network switch has power." +
+                "<br><br>" +
+                "<div id='support'>If this problem persists, please contact support at serivcedesk@nomadgcs.com</div>" +
+                "</div>"
+            return
         }
-    }
 
-    const timerInterval = setInterval(updateCountdown, 1000)
-    updateCountdown() // initial call to display the countdown immediately
+        setTimeout(updateCountdown, 1000)
+        const minutes = Math.floor(timeToBoot / oneMinute)
+        const seconds = Math.floor(timeToBoot % oneMinute / 1000).toString().padStart(2, "0")
+        countdown.innerHTML = `Estimated time remaining ${minutes}:${seconds}`
+    }
+    // Delay the start of estimated time in case boot is immediate
+    setTimeout(updateCountdown, Math.min(endTime - Date.now() - 5000, 10000))
 }
 
-// Set the target time for the countdown (in milliseconds since Jan 1, 1970)
-const targetTime = new Date().getTime() + (10 * 60 * 1000) // 10 minutes from now
-countdownTimer(targetTime)
+countdownTimer(Date.now() + 10 * 60 * 1000)

@@ -22,6 +22,25 @@ body {
     height: auto;
 }
 
+.truck-driving {
+    max-width: 50%;
+    height: auto;
+    position: relative;
+    animation: drive 3s linear infinite;
+}
+
+@keyframes drive {
+    0% {
+        transform: translateX(150%); /* Start off-screen to the left */
+    }
+    50% {
+        transform: translateX(50%); /* Center on the screen */
+    }
+    100% {
+        transform: translateX(-150%); /* End off-screen to the right */
+    }
+}
+
 .spinner-container {
     display: flex;
     align-items: center;
@@ -47,6 +66,12 @@ body {
     }
 }
 
+#display {
+    font-size: 24px;
+    margin-left: 35px;
+    color: #333;
+}
+
 #loading {
     font-size: 24px;
     margin-left: 35px;
@@ -57,4 +82,10 @@ body {
     font-size: 18px;
     margin-top: 20px;
     color: #999999;
+}
+
+#support {
+    font-size: 18px;
+    margin-top: 20px;
+    color: #333333;
 }
