@@ -28,7 +28,7 @@
       "installerIcon": "assets/images/icon.ico",
       "uninstallerIcon": "assets/images/icon.ico",
       "uninstallDisplayName": "Nomad Total Command",
-      "license": "LICENSE.MD",
+      "license": "license.html",
       "allowElevation": true,
       "allowToChangeInstallationDirectory": false
     }
