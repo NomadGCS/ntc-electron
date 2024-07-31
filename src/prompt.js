@@ -18,27 +18,26 @@ addressInput.addEventListener('input', () => {
 })
 
 minutesInput.addEventListener('input', () => {
-    if (minutesInput.value === '' || minutesPattern.test(minutesInput.value)) {
+    const value = minutesInput.value
+    if (value === "" || minutesPattern.test(value) && 1 <= value && value <= 60) {
         submitButton.disabled = false
         minutesError.textContent = ""
     } else {
         submitButton.disabled = true
-        minutesError.textContent = "Value must be a number greater than 0"
+        minutesError.textContent = "Value must be a a number between 1 and 60"
     }
 })
 
 document.getElementById('submitButton').addEventListener('click', () => {
 
-    console.log("submit")
     const ip = addressInput.value;
     const minutes = minutesInput.value;
     if (ipv4Pattern.test(ip) && minutesPattern.test(minutes)) {
-        console.log("yes")
         window.electron.setConfig({
             address: ip,
             expectedBootTime: minutes * 60 // Convert to seconds
         });
     } else {
-        console.log(ip + " " + minutes)
+        console.debug(`Invalid input: ${ip}, ${minutes}`)
     }
 });
