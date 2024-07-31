@@ -1,0 +1,38 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('fonts/Montserrat-Regular.ttf') format('ttf'),
+    url('fonts/Montserrat-Regular.ttf') format('ttf');
+    font-weight: 400;
+}
+
+html {
+    background: url('../images/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+img.displayed {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+}
+
+#loadingText {
+    display: block;
+    text-align: center;
+    font-size: 25px;
+}
+
+.in-page-notification {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    top: 25%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Apply translation */
+    padding: 15px; /* Padding inside the notification */
+    background-color: #CC2027; /* Red background color */
+    color: whitesmoke; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 20px; /* Rounded corners */
+    z-index: 100; /* Make sure it's on top */
+}
