@@ -1,9 +1,8 @@
-const startTime = Date.now()
 const oneMinute = 1000 * 60
 const instantLoadDelay = 5000
 const driveTruckDelay = 3 * 60 * 1000 // 3 minutes
 
-function countdownTimer(endTime) {
+function countdownTimer(startTime, endTime) {
 
     const truck = document.getElementById("truck")
     const countdown = document.getElementById("countdown")
@@ -32,11 +31,11 @@ function countdownTimer(endTime) {
 
 window.electron.getConfig((_, config) => {
     const expectedBootTime = config.expectedBootTime * 1000
-    const endTime = startTime + expectedBootTime
+    const endTime = config.startupTime + expectedBootTime
     // Countdown is expected boot time plus the load delay plus a 1-second buffer
     // So, 3 minute boot time (i.e. 180 seconds) plus
     //  5-second load delay and buffer would be 186 seconds
     // NOTE: the buffer is so the countdown starts at the time
     //  (e.g. 3:00) instead of one second less (e.g. 2:59)
-    countdownTimer(endTime + instantLoadDelay + 1000)
+    countdownTimer(config.startupTime, endTime + instantLoadDelay + 1000)
 })

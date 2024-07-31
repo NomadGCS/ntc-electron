@@ -113,6 +113,7 @@ app.whenReady().then(() => {
         const contents = fs.readFileSync(configFilePath, 'utf8')
         console.debug(configFilePath + ' -> ' + contents)
         config = JSON.parse(contents)
+        config.startupTime = Date.now()
     }
 
     createWindow()
@@ -133,6 +134,7 @@ app.on('window-all-closed', () => app.quit())
 
 ipcMain.on('set-config', (event, configObj) => {
     config = configObj
+    config.startupTime = Date.now()
     const value = JSON.stringify(config)
     console.debug(`Setting config to ${value}`)
     const userDataPath = app.getPath('userData')
