@@ -1,12 +1,12 @@
 @font-face {
     font-family: 'Montserrat';
-    src: url('fonts/Montserrat-Regular.ttf') format('ttf'),
-    url('fonts/Montserrat-Regular.ttf') format('ttf');
+    src: url('../assets/fonts/Montserrat-Regular.ttf') format('ttf'),
+    url('../assets/fonts/Montserrat-Regular.ttf') format('ttf');
     font-weight: 400;
 }
 
 html {
-    background: url('../images/background.jpg') no-repeat center center fixed;
+    background: url('../assets/images/background.jpg') no-repeat center center fixed;
     background-size: cover;
 }
 

@@ -19,14 +19,14 @@
       "target": [
         "nsis"
       ],
-      "icon": "images/icon.ico"
+      "icon": "assets/images/icon.ico"
     },
     "nsis": {
       "oneClick": true,
       "artifactName": "NTC Setup ${version}.${ext}",
       "shortcutName": "NTC",
-      "installerIcon": "images/icon.ico",
-      "uninstallerIcon": "images/icon.ico",
+      "installerIcon": "assets/images/icon.ico",
+      "uninstallerIcon": "assets/images/icon.ico",
       "uninstallDisplayName": "Nomad Total Command",
       "license": "license.md",
       "allowElevation": true,

@@ -73,7 +73,7 @@ function createWindow () {
     mainWindow = new BrowserWindow({
         autoHideMenuBar: true,
         kiosk: true,
-        icon: 'images/icon.png',
+        icon: "assets/images/icon.png",
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
