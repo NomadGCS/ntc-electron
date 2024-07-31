@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Button Activation</title>
+    <title>Truck Image with Spinner and Countdown</title>
     <link href="index.css" rel="stylesheet">
 </head>
-<body id="body">
-<div id="text">
-    <img src="../assets/images/logo.png" class="displayed" align="middle"/>
-    <p id= "loadingText">Please wait while Nomad Total Command loads</p>
+<body>
+<img id="truck" src="../assets/images/truck.png" alt="Truck Image">
+<div class="spinner-container">
+    <div class="spinner"></div>
+    <div id="loading">
+        Please wait while NTC boots...
+    </div>
 </div>
-<div id="inPageNotification" class="in-page-notification" style="display:none;">
-    <h2> There appears to be a minor issue.</h2>
-    <p>Please press and hold the reset button located on the electrical cabinet door for 40 seconds in order to reboot the system. <br/>If the issue is not resolved, please contact servicedesk@nomadgcs.com for assistance.
-    </p>
-</div>
+<div id="countdown"></div>
+<script src="countdown.js"></script>
 </body>
 </html>

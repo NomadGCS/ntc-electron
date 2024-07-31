@@ -7,6 +7,10 @@ let config
 let mainWindow
 let addressLoaded = false
 
+function getConfig() {
+    return config
+}
+
 function redirectOnStatus (address) {
 
     const handleUnreachable = () => {

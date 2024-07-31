@@ -5,34 +5,56 @@
     font-weight: 400;
 }
 
-html {
-    background: url('../assets/images/background.jpg') no-repeat center center fixed;
-    background-size: cover;
-}
-
-img.displayed {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 5%;
-}
-
-#loadingText {
-    display: block;
+body {
     text-align: center;
-    font-size: 25px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
 }
 
-.in-page-notification {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    top: 25%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Apply translation */
-    padding: 15px; /* Padding inside the notification */
-    background-color: #CC2027; /* Red background color */
-    color: whitesmoke; /* White text color */
-    text-align: center; /* Centered text */
-    border-radius: 20px; /* Rounded corners */
-    z-index: 100; /* Make sure it's on top */
+#truck {
+    max-width: 50%;
+    height: auto;
+}
+
+.spinner-container {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.spinner {
+    margin: 20px 0;
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #CC2027;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#loading {
+    font-size: 24px;
+    margin-left: 35px;
+    color: #333;
+}
+
+#countdown {
+    font-size: 18px;
+    margin-top: 20px;
+    color: #999999;
 }
