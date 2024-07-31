@@ -15,7 +15,7 @@ function countdownTimer(startTime, endTime) {
             display.innerHTML =
                 "<div style='margin-top: 40px'>Unable to reach the NTC server! Please ensure the network switch has power." +
                 "<br><br>" +
-                "<div id='support'>If this problem persists, please contact support at serivcedesk@nomadgcs.com</div>" +
+                "<div id='support'>If this problem persists, contact support at serivcedesk@nomadgcs.com</div>" +
                 "</div>"
             return
         }
