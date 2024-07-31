@@ -20,6 +20,6 @@ window.addEventListener('DOMContentLoaded', () => {
 })
 
 contextBridge.exposeInMainWorld('electron', {
-    getConfig: callback => ipcRenderer.on("get-config", callback),
+    getConfig: () => ipcRenderer.invoke("get-config"),
     setConfig: config => ipcRenderer.send("set-config", config)
 });

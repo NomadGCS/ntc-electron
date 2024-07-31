@@ -29,7 +29,10 @@ function countdownTimer(startTime, endTime) {
     setTimeout(updateCountdown, Math.min(endTime - startTime - instantLoadDelay / 2, instantLoadDelay))
 }
 
-window.electron.getConfig((_, config) => {
+console.log("Starting countdown...")
+console.debug("Requesting config...")
+window.electron.getConfig().then(config => {
+    console.debug(`Received config: ${JSON.stringify(config)}`)
     const expectedBootTime = config.expectedBootTime * 1000
     const endTime = config.startupTime + expectedBootTime
     // Countdown is expected boot time plus the load delay plus a 1-second buffer

@@ -117,7 +117,6 @@ app.whenReady().then(() => {
     }
 
     createWindow()
-    mainWindow.webContents.send("get-config", config)
     if (config?.address) {
         mainWindow.loadFile('src/index.html')
         redirectOnStatus(config.address)
@@ -132,6 +131,7 @@ app.on('activate', () => {
 
 app.on('window-all-closed', () => app.quit())
 
+ipcMain.handle("get-config", () => config)
 ipcMain.on('set-config', (event, configObj) => {
     config = configObj
     config.startupTime = Date.now()
