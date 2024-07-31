@@ -1,0 +1,35 @@
+name: NodeJS CI with Electron
+
+on:
+  push:
+    branches:
+      - '*'
+      - 'bugfix/**'
+      - 'update/**'
+      - 'feature/**'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build & Publish
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
