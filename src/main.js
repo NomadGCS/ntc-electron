@@ -116,6 +116,7 @@ app.whenReady().then(() => {
     }
 
     createWindow()
+    mainWindow.webContents.send("get-config", config)
     if (config?.address) {
         mainWindow.loadFile('src/index.html')
         redirectOnStatus(config.address)
