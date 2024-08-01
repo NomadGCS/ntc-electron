@@ -17,7 +17,8 @@
     "url": "https://github.com/NomadGCS/ntc-electron"
   },
   "build": {
-    "appId": "nomad-total-command",
+    "appId": "com.nomadgcs.ntc.electron",
+    "productName": "Nomad Total Command",
     "publish": {
       "provider": "github",
       "owner": "NomadGCS",
