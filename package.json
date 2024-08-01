@@ -12,8 +12,18 @@
     "electron": "^31.3.0",
     "electron-builder": "^24.13.3"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NomadGCS/ntc-electron"
+  },
   "build": {
     "appId": "nomad-total-command",
+    "publish": {
+      "provider": "github",
+      "owner": "NomadGCS",
+      "repo": "ntc-electron",
+      "releaseType": "draft"
+    },
     "win": {
       "target": [
         "nsis"
