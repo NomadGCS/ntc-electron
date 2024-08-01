@@ -6,8 +6,7 @@
   "author": "NomadGCS",
   "license": "UNLICENSED",
   "scripts": {
-    "start": "electron .",
-    "build": "electron-builder"
+    "start": "electron ."
   },
   "devDependencies": {
     "electron": "^31.3.0",
