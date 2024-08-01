@@ -1,7 +1,7 @@
 {
   "name": "nomad-total-command",
   "description": "The NTC interface for dedicated tablet devices",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "src/main.js",
   "author": "NomadGCS",
   "license": "UNLICENSED",

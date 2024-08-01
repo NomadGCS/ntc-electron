@@ -2,20 +2,30 @@ const oneMinute = 1000 * 60
 const instantLoadDelay = 5000
 const driveTruckDelay = 3 * 60 * 1000 // 3 minutes
 
-function countdownTimer(startTime, endTime) {
+function countdownTimer(startTime, endTime, resetInstructions, supportEmail) {
 
     const truck = document.getElementById("truck")
     const countdown = document.getElementById("countdown")
     const display = document.getElementById("display")
+    if (!resetInstructions) {
+        resetInstructions = "Hold the reset button on the electrical cabinet for 40 seconds to reboot the system."
+    }
+
+    if (!supportEmail) {
+        supportEmail = "servicedesk@nomadgcs.com"
+    }
+
     const updateCountdown = () => {
 
         const timeToBoot = endTime - Date.now()
         if (timeToBoot < 1000) {
             setTimeout(() => truck.classList.add("truck-driving"), driveTruckDelay)
             display.innerHTML =
-                "<div style='margin-top: 40px'>Unable to reach the NTC server! Please ensure the network switch has power." +
+                "<div style='margin-top: 40px'>Unable to reach the NTC server!" +
+                "<br>" +
+                `<div style='font-size: 20px'>${resetInstructions}</div>` +
                 "<br><br>" +
-                "<div id='support'>If this problem persists, contact support at serivcedesk@nomadgcs.com</div>" +
+                `<div id='support'>If this issue persists, contact support at ${supportEmail}</div>` +
                 "</div>"
             return
         }
@@ -40,5 +50,10 @@ window.electron.getConfig().then(config => {
     //  5-second load delay and buffer would be 186 seconds
     // NOTE: the buffer is so the countdown starts at the time
     //  (e.g. 3:00) instead of one second less (e.g. 2:59)
-    countdownTimer(config.startupTime, endTime + instantLoadDelay + 1000)
+    countdownTimer(
+        config.startupTime,
+        endTime + instantLoadDelay + 1000,
+        config.resetInstructions,
+        config.supportEmailAddress
+    )
 })

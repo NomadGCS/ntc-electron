@@ -101,7 +101,7 @@ body {
     font-size: 14px;
 }
 
-#addressError, #minutesError {
+#addressError, #minutesError, #emailError {
     color: #CC2027;
     display: flex;
 }
